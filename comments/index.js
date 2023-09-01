@@ -27,7 +27,7 @@ app.post("/posts/:id/comments", async (req, res) => {
   });
   commentByPostId[req.params.id] = comments;
 
-  await axios.post("http://localhost:6000/events", {
+  await axios.post("http://event-bus-srv:6000/events", {
     type: "CommentCreated",
     data: {
       id: commentId,
@@ -40,14 +40,14 @@ app.post("/posts/:id/comments", async (req, res) => {
   res.status(201).send(comments);
 });
 
-app.post("/events", (req, res) => {
+app.post("/events", async (req, res) => {
   console.log("Received events", req.body.type);
 
   const { type, data } = req.body;
 
   if (type === "CommentModerated") {
     console.log("data++", data);
-    const { postId, id, status } = data;
+    const { postId, id, status, content } = data;
     const comments = commentByPostId[postId];
 
     const comment = comments.find((comment) => {
@@ -55,6 +55,16 @@ app.post("/events", (req, res) => {
     });
 
     comment.status = status;
+
+    await axios.post("http://event-bus-srv:6000/events", {
+      type: "CommentUpdated",
+      data: {
+        id,
+        content,
+        postId,
+        status,
+      },
+    });
   }
 
   res.send({});

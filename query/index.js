@@ -56,7 +56,7 @@ app.listen(7000, async () => {
   console.log("Listening on 7000...");
 
   try {
-    const res = await axios.get("http://localhost:6000/events");
+    const res = await axios.get("http://event-bus-srv:6000/events");
 
     for (let event of res.data) {
       console.log("Processing event: ", event.type);
