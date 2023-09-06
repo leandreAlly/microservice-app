@@ -5,4 +5,7 @@ metadata:
 spec:
   containers:
     - name: posts
-      image: ally/posts:0.0.1
+      image: ally/postßs:0.0.1
+
+
+      kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
